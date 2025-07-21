@@ -33,9 +33,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 window.addEventListener('scroll', () => {
     const navbar = document.querySelector('.navbar');
     if (window.scrollY > 100) {
-        navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+        navbar.style.background = 'var(--navbar-scrolled)';
     } else {
-        navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+        navbar.style.background = 'var(--navbar-bg)';
     }
 });
 
@@ -57,4 +57,67 @@ contactForm.addEventListener('submit', (e) => {
     } else {
         alert('Please fill in all fields.');
     }
+});
+
+// Scroll progress indicator
+window.addEventListener('scroll', () => {
+    const scrollTop = document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight;
+    const clientHeight = document.documentElement.clientHeight;
+    const scrollPercent = (scrollTop / (scrollHeight - clientHeight)) * 100;
+    document.documentElement.style.setProperty('--scroll', scrollPercent + '%');
+});
+
+// Theme switcher
+document.addEventListener('DOMContentLoaded', function() {
+    // Check for saved theme preference
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-theme');
+    }
+
+    // Create theme toggle button
+    const themeToggle = document.createElement('button');
+    themeToggle.id = 'theme-toggle';
+    themeToggle.innerHTML = '🌓';
+    document.body.appendChild(themeToggle);
+
+    // Theme toggle functionality
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-theme');
+        const isDark = document.body.classList.contains('dark-theme');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+});
+
+// Typewriter effect for hero section
+function typeWriter(element, text, speed) {
+    let i = 0;
+    function typing() {
+        if (i < text.length) {
+            element.textContent += text.charAt(i);
+            i++;
+            setTimeout(typing, speed);
+        }
+    }
+    element.textContent = '';
+    typing();
+}
+
+const heroTitle = document.querySelector('.hero h1');
+if (heroTitle) {
+    const originalText = heroTitle.textContent;
+    typeWriter(heroTitle, originalText, 100);
+}
+
+// Intersection Observer for animations
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('animate-section');
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('section').forEach(section => {
+    observer.observe(section);
 });
